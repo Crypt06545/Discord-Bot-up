@@ -2,6 +2,11 @@ import time
 import requests
 from requests.exceptions import RequestException, ConnectionError, Timeout, HTTPError
 import logging
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Setup logging
 logging.basicConfig(
@@ -10,8 +15,8 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-# Your specific URL to ping
-url = "https://lore-sxoa.onrender.com"
+# Load URL from environment variable
+url = os.getenv("PING_URL")
 
 # Custom headers (optional)
 headers = {
@@ -48,7 +53,10 @@ def start_pinging(interval=60):
 
 if __name__ == "__main__":
     try:
-        start_pinging(interval=60)  # Ping every 60 seconds (adjust if needed)
+        if not url:
+            print("❌ Error: PING_URL not set in .env file.")
+        else:
+            start_pinging(interval=60)  # Ping every 60 seconds (adjust if needed)
     except KeyboardInterrupt:
         print("\nStopping the ping script.")
         logging.info("Ping script stopped by user.")
