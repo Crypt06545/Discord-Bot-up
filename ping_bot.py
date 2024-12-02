@@ -16,15 +16,17 @@ logging.basicConfig(
 
 url = os.getenv("PING_URL")
 status_message = "Uptime Monitor Running"
+last_checked = "Not checked yet"
 
 def ping_url(url, retries=3, backoff_factor=2):
+    global status_message, last_checked
     attempt = 0
-    global status_message
+    last_checked = time.strftime("%Y-%m-%d %H:%M:%S")  # Update last checked time
     while attempt < retries:
         try:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
-            status_message = f"✅ Ping successful! Status: {response.status_code}"
+            status_message = f"✅ Bot is alive! Status: {response.status_code}"
             logging.info(status_message)
             print(status_message)
             return
